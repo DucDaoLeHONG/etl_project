@@ -1,0 +1,61 @@
+{
+  "pipeline": "dll_imports",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha256_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls": {
+      "passed": true,
+      "detail": ""
+    },
+    "features_binary": {
+      "passed": true,
+      "detail": ""
+    },
+    "type_code_range_0_6": {
+      "passed": true,
+      "detail": ""
+    },
+    "unique_dll_columns": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_rows_with_zero_imports": {
+      "passed": true,
+      "detail": "0 rows import no DLL (kept, flagged)"
+    },
+    "no_all_zero_dll_columns": {
+      "passed": true,
+      "detail": "0 columns"
+    }
+  },
+  "metrics": {
+    "rows_raw": 29498,
+    "columns_raw": 631,
+    "dll_columns_merged_after_lowercase": [],
+    "duplicate_hashes_with_conflicting_type": 0,
+    "duplicate_rows_removed": 3,
+    "rows_clean": 29495,
+    "dll_columns": 629,
+    "type_counts": {
+      "0": 1877,
+      "1": 5022,
+      "2": 4643,
+      "3": 4957,
+      "4": 5076,
+      "5": 4221,
+      "6": 3699
+    },
+    "catalog_rows": 29495,
+    "seconds": 7.25
+  },
+  "outputs": {
+    "features": "/home/claude/etl_project/data/processed/dll_imports_features.csv.gz",
+    "dll_vocabulary": "/home/claude/etl_project/data/processed/dll_imports_dll_vocabulary.csv.gz"
+  }
+}

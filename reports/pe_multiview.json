@@ -1,0 +1,59 @@
+{
+  "pipeline": "pe_multiview",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_type_disagreement": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_clashing_columns": {
+      "passed": true,
+      "detail": ""
+    },
+    "joined_equals_full_coverage": {
+      "passed": true,
+      "detail": ""
+    },
+    "type_code_range_0_6": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls_after_join": {
+      "passed": true,
+      "detail": "0 nulls"
+    },
+    "join_loss_under_5pct": {
+      "passed": true,
+      "detail": "562 of 30054 samples dropped (1.9%) - see coverage table"
+    }
+  },
+  "metrics": {
+    "type_disagreements_across_views": 0,
+    "clashing_columns": [],
+    "universe_size": 30054,
+    "coverage_counts": {
+      "1": 538,
+      "2": 24,
+      "3": 29492
+    },
+    "rows_clean": 29492,
+    "n_columns": 803,
+    "type_counts": {
+      "0": 1877,
+      "1": 5022,
+      "2": 4643,
+      "3": 4955,
+      "4": 5076,
+      "5": 4220,
+      "6": 3699
+    },
+    "seconds": 12.64
+  },
+  "outputs": {
+    "features": "/home/claude/etl_project/data/processed/pe_multiview_features.csv.gz",
+    "coverage": "/home/claude/etl_project/data/processed/pe_multiview_coverage.csv.gz"
+  }
+}

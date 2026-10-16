@@ -1,0 +1,67 @@
+{
+  "pipeline": "pe_headers",
+  "checks": {
+    "unique_name": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "holdout_has_all_train_features": {
+      "passed": true,
+      "detail": "[]"
+    },
+    "holdout_only_extra_is_none": {
+      "passed": true,
+      "detail": "[]"
+    },
+    "no_nulls_in_features": {
+      "passed": true,
+      "detail": ""
+    },
+    "number_of_sections_nonneg": {
+      "passed": true,
+      "detail": ""
+    },
+    "virusshare_names_are_malware": {
+      "passed": true,
+      "detail": ""
+    },
+    "compile_timestamps_plausible": {
+      "passed": true,
+      "detail": "732 rows (3.7%) have 0/future timestamps -> compile_time NaT"
+    }
+  },
+  "metrics": {
+    "rows_raw[train]": 19611,
+    "rows_raw[holdout]": 17,
+    "feature_columns": 77,
+    "duplicate_names_removed": 0,
+    "feature_duplicate_rows": 2984,
+    "feature_duplicate_groups_with_conflicting_labels": 4,
+    "constant_columns": [
+      "e_magic",
+      "section_max_entropy",
+      "section_max_rawsize",
+      "section_max_virtualsize",
+      "section_min_physical",
+      "section_min_virtual",
+      "section_min_pointer_data",
+      "section_main_char"
+    ],
+    "rows_clean[train]": 19611,
+    "rows_clean[holdout]": 17,
+    "class_counts": {
+      "1": 14599,
+      "0": 5012
+    },
+    "catalog_rows": 19611,
+    "seconds": 1.15
+  },
+  "outputs": {
+    "train": "/home/claude/etl_project/data/processed/pe_headers_train.csv.gz",
+    "holdout": "/home/claude/etl_project/data/processed/pe_headers_holdout.csv.gz"
+  }
+}

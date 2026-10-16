@@ -1,0 +1,76 @@
+{
+  "pipeline": "xpe_guard",
+  "checks": {
+    "no_nulls": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_negative_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_infinite_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_matches_family": {
+      "passed": true,
+      "detail": ""
+    },
+    "flag_columns_binary": {
+      "passed": true,
+      "detail": "28 flag columns"
+    },
+    "bitfield_columns_integer": {
+      "passed": true,
+      "detail": "['is_dll', 'is_executable', 'has_aslr', 'has_dep']"
+    },
+    "min_le_avg_le_max_entropy": {
+      "passed": true,
+      "detail": ""
+    },
+    "min_le_max_section_size": {
+      "passed": true,
+      "detail": ""
+    }
+  },
+  "metrics": {
+    "rows_raw": 9600,
+    "duplicate_feature_rows_with_conflicting_labels": 0,
+    "duplicate_rows_removed": 192,
+    "non_binary_flag_columns": [
+      "is_dll",
+      "is_executable",
+      "has_aslr",
+      "has_dep"
+    ],
+    "constant_columns": [
+      "has_delayed_imports",
+      "is_executable",
+      "is_system_file",
+      "is_signed",
+      "has_rich_header",
+      "rich_header_entries",
+      "has_vm_mac_addresses",
+      "has_relocations",
+      "is_executable_any"
+    ],
+    "rows_clean": 9408,
+    "family_counts": {
+      "benign": 4678,
+      "trojan": 1587,
+      "ransomware": 1574,
+      "spyware": 1569
+    },
+    "catalog_rows": 9408,
+    "seconds": 1.19
+  },
+  "outputs": {
+    "clean": "/home/claude/etl_project/data/processed/xpe_guard_clean.csv.gz",
+    "model": "/home/claude/etl_project/data/processed/xpe_guard_model.csv.gz"
+  }
+}

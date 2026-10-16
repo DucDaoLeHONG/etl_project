@@ -1,0 +1,65 @@
+{
+  "pipeline": "pe_header",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha256_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls": {
+      "passed": true,
+      "detail": ""
+    },
+    "e_magic_is_MZ": {
+      "passed": true,
+      "detail": ""
+    },
+    "optional_magic_valid": {
+      "passed": true,
+      "detail": "0x10b PE32 / 0x20b PE32+"
+    },
+    "type_code_range_0_6": {
+      "passed": true,
+      "detail": ""
+    },
+    "number_of_sections_positive": {
+      "passed": true,
+      "detail": ""
+    },
+    "pe32plus_matches_amd64": {
+      "passed": true,
+      "detail": ""
+    },
+    "compile_timestamps_plausible": {
+      "passed": true,
+      "detail": "3529 rows (11.8%) zero/future -> NaT"
+    }
+  },
+  "metrics": {
+    "rows_raw": 29807,
+    "duplicate_rows_removed": 0,
+    "constant_columns": [
+      "e_magic",
+      "loader_flags"
+    ],
+    "rows_clean": 29807,
+    "type_counts": {
+      "0": 1877,
+      "1": 5047,
+      "2": 4864,
+      "3": 4973,
+      "4": 5104,
+      "5": 4236,
+      "6": 3706
+    },
+    "catalog_rows": 29807,
+    "seconds": 1.93
+  },
+  "outputs": {
+    "clean": "/home/claude/etl_project/data/processed/pe_header_clean.csv.gz",
+    "model": "/home/claude/etl_project/data/processed/pe_header_model.csv.gz"
+  }
+}

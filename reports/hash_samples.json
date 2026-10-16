@@ -1,0 +1,56 @@
+{
+  "pipeline": "hash_samples",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha256_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha1_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "md5_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "size_positive": {
+      "passed": true,
+      "detail": ""
+    },
+    "is_signed_binary": {
+      "passed": true,
+      "detail": ""
+    },
+    "both_classes_present": {
+      "passed": true,
+      "detail": ""
+    }
+  },
+  "metrics": {
+    "rows_raw[malicious]": 1000,
+    "rows_raw[benign]": 1000,
+    "duplicate_rows_removed": 29,
+    "duplicate_hashes_with_conflicting_labels": 0,
+    "rows_clean": 1971,
+    "class_counts": {
+      "malicious": 1000,
+      "benign": 971
+    },
+    "rows_without_import_info": 53,
+    "catalog_rows": 1971,
+    "seconds": 0.73
+  },
+  "outputs": {
+    "samples": "/home/claude/etl_project/data/processed/hash_samples_samples.csv.gz",
+    "imports_long": "/home/claude/etl_project/data/processed/hash_samples_imports_long.csv.gz",
+    "features": "/home/claude/etl_project/data/processed/hash_samples_features.csv.gz"
+  }
+}

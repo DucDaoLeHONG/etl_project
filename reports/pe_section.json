@@ -1,0 +1,73 @@
+{
+  "pipeline": "pe_section",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha256_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_negative_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls_except_ratio": {
+      "passed": true,
+      "detail": ""
+    },
+    "type_code_range_0_6": {
+      "passed": true,
+      "detail": ""
+    },
+    "long_matches_wide_counts": {
+      "passed": true,
+      "detail": ""
+    },
+    "long_hashes_in_wide": {
+      "passed": true,
+      "detail": ""
+    },
+    "text_section_common": {
+      "passed": true,
+      "detail": "90.4% have .text"
+    }
+  },
+  "metrics": {
+    "rows_raw": 29760,
+    "duplicate_rows_removed": 0,
+    "constant_columns": [
+      "bss_pointer_to_relocations",
+      "bss_pointer_to_linenumbers",
+      "bss_number_of_relocations",
+      "bss_number_of_linenumbers",
+      "pdata_pointer_to_relocations",
+      "pdata_pointer_to_linenumbers",
+      "pdata_number_of_relocations",
+      "pdata_number_of_linenumbers"
+    ],
+    "rows_without_any_section_data": 658,
+    "rows_clean": 29760,
+    "long_rows": 97830,
+    "samples_with_wx_section": 898,
+    "section_prevalence": {
+      "text": 0.9038,
+      "data": 0.5098,
+      "rdata": 0.294,
+      "bss": 0.0404,
+      "idata": 0.0571,
+      "edata": 0.0035,
+      "rsrc": 0.9037,
+      "reloc": 0.5147,
+      "tls": 0.0391,
+      "pdata": 0.0213
+    },
+    "catalog_rows": 29760,
+    "seconds": 2.69
+  },
+  "outputs": {
+    "features": "/home/claude/etl_project/data/processed/pe_section_features.csv.gz",
+    "sections_long": "/home/claude/etl_project/data/processed/pe_section_sections_long.csv.gz"
+  }
+}
