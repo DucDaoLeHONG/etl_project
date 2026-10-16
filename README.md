@@ -22,9 +22,12 @@ Also written: `catalog.sqlite` (`sample_catalog` table), `reports/<pipeline>.jso
 ```bash
 pip install -r requirements.txt
 python -m etl.run_etl                  # all pipelines
+python -m etl.run_etl pe_section       # just one
 python -m etl.run_etl xpe_guard        # just one
 python -m unittest discover -s tests   # unit + end-to-end tests
 ```
+Run these commands from the project root. Do not run a file in `etl/pipelines/` directly;
+those modules use package-relative imports.
 Exit code is non-zero if any quality check fails. Re-runs are idempotent (outputs overwritten, catalog rows replaced).
 Output is Parquet when `pyarrow` is installed, otherwise `.csv.gz` (`config.OUTPUT_FORMAT`).
 
