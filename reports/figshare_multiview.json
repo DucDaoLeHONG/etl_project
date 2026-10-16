@@ -1,0 +1,125 @@
+{
+  "pipeline": "figshare_multiview",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_type_disagreement": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_clashing_columns": {
+      "passed": true,
+      "detail": ""
+    },
+    "type_code_range_0_6": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_consistent_with_type": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls_after_join": {
+      "passed": true,
+      "detail": "0 nulls"
+    },
+    "join_loss_under_5pct": {
+      "passed": true,
+      "detail": "562 of 30054 hashes not in all 3 views"
+    },
+    "no_duplicate_feature_vectors": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_conflicting_labels": {
+      "passed": true,
+      "detail": ""
+    }
+  },
+  "metrics": {
+    "type_disagreements_across_views": 0,
+    "clashing_columns": [],
+    "coverage_counts": {
+      "1": 538,
+      "2": 24,
+      "3": 29492
+    },
+    "conflicting_label_groups": 23,
+    "conflicting_label_rows": 216,
+    "conflicting_rows_on_label_alone": 0,
+    "duplicate_feature_rows": 5850,
+    "constant_columns_dropped": 10,
+    "class_balance_binary": {
+      "counts": {
+        "0": 1876,
+        "1": 21550
+      },
+      "minority_share": 0.0801,
+      "imbalance_ratio_max_over_min": 11.49
+    },
+    "class_balance_type": {
+      "counts": {
+        "0": 1876,
+        "1": 4813,
+        "2": 1359,
+        "3": 2998,
+        "4": 4767,
+        "5": 4028,
+        "6": 3585
+      },
+      "minority_share": 0.058,
+      "imbalance_ratio_max_over_min": 3.54
+    },
+    "seconds": 7.14
+  },
+  "row_counts": [
+    {
+      "step": "header view (staging)",
+      "rows": 29807,
+      "cols": 57
+    },
+    {
+      "step": "section view (staging)",
+      "rows": 29760,
+      "cols": 130
+    },
+    {
+      "step": "dll view (staging)",
+      "rows": 29495,
+      "cols": 633
+    },
+    {
+      "step": "after header+section inner join",
+      "rows": 29514,
+      "cols": 184
+    },
+    {
+      "step": "after +dll inner join",
+      "rows": 29492,
+      "cols": 814
+    },
+    {
+      "step": "entering de-duplication",
+      "rows": 29492,
+      "cols": 811
+    },
+    {
+      "step": "after conflicting-label removal",
+      "rows": 29276
+    },
+    {
+      "step": "after duplicate-feature removal",
+      "rows": 23426
+    },
+    {
+      "step": "final model table",
+      "rows": 23426,
+      "cols": 804
+    }
+  ],
+  "outputs": {
+    "model": "/home/claude/etl_project/data/processed/figshare_multiview_model.csv"
+  }
+}

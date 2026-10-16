@@ -35,11 +35,20 @@ def read_csv_plain(path: Path, **kwargs) -> pd.DataFrame:
 
 def read_table(name: str) -> pd.DataFrame:
     """Read back a table written by write_table() (used by pipelines that build on earlier outputs)."""
-    for ext in ("parquet", "csv.gz"):
+    for ext in ("csv", "csv.gz", "parquet"):
         path = config.PROCESSED_DIR / f"{name}.{ext}"
         if path.exists():
             return pd.read_parquet(path) if ext == "parquet" else pd.read_csv(path, low_memory=False)
     raise FileNotFoundError(f"processed table {name!r} not found - run its pipeline first")
+
+
+def find_member(zip_path: Path, basename: str) -> str:
+    """Zip member whose file name is `basename` (archives often add a top-level folder)."""
+    with zipfile.ZipFile(zip_path) as zf:
+        hits = [n for n in zf.namelist() if n.rsplit("/", 1)[-1] == basename]
+    if not hits:
+        raise FileNotFoundError(f"{basename!r} not found in {zip_path.name}")
+    return hits[0]
 
 
 # --------------------------------------------------------------- transform
@@ -59,6 +68,38 @@ def downcast(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def drop_duplicates_and_conflicts(
+    df: pd.DataFrame, feature_cols: list[str], label_cols: list[str], report: "QualityReport", tag: str = ""
+) -> pd.DataFrame:
+    """Remove (1) every row whose feature vector appears with more than one label, then
+    (2) repeated identical feature vectors (first kept). Row counts are logged at each step.
+
+    Identical rows in train and test inflate scores, and one vector with two labels is unlearnable,
+    so this must happen BEFORE splitting. Vectors are compared through a 64-bit row hash.
+    """
+    pre = f"{tag}: " if tag else ""
+    report.step(f"{pre}entering de-duplication", len(df), len(feature_cols))
+    key = pd.util.hash_pandas_object(df[feature_cols], index=False)
+    label = df[label_cols[0]].astype(str)
+    for c in label_cols[1:]:
+        label = label + "|" + df[c].astype(str)
+    conflict = label.groupby(key).transform("nunique") > 1
+    report.metric(f"{pre}conflicting_label_groups", int(key[conflict].nunique()))
+    report.metric(f"{pre}conflicting_label_rows", int(conflict.sum()))
+    if len(label_cols) > 1:  # how many of those conflict even on the coarse label alone
+        coarse = df[label_cols[0]].astype(str).groupby(key).transform("nunique") > 1
+        report.metric(f"{pre}conflicting_rows_on_{label_cols[0]}_alone", int(coarse.sum()))
+    if config.REMOVE_CONFLICTING_LABELS:
+        df, key = df[~conflict], key[~conflict]
+    report.step(f"{pre}after conflicting-label removal", len(df))
+    dup = key.duplicated(keep="first")
+    report.metric(f"{pre}duplicate_feature_rows", int(dup.sum()))
+    if config.DROP_FEATURE_DUPLICATES:
+        df = df[~dup]
+    report.step(f"{pre}after duplicate-feature removal", len(df))
+    return df.reset_index(drop=True)
+
+
 # -------------------------------------------------------------------- load
 def _parquet_available() -> bool:
     for mod in ("pyarrow", "fastparquet"):
@@ -72,8 +113,8 @@ def _parquet_available() -> bool:
 
 def output_extension() -> str:
     fmt = config.OUTPUT_FORMAT
-    if fmt == "auto":
-        fmt = "parquet" if _parquet_available() else "csv.gz"
+    if fmt == "parquet" and not _parquet_available():
+        raise RuntimeError("OUTPUT_FORMAT='parquet' but pyarrow/fastparquet is not installed")
     return fmt
 
 
@@ -84,8 +125,10 @@ def write_table(df: pd.DataFrame, name: str) -> Path:
     path = config.PROCESSED_DIR / f"{name}.{ext}"
     if ext == "parquet":
         df.to_parquet(path, index=False)
-    else:
+    elif ext == "csv.gz":
         df.to_csv(path, index=False, compression="gzip")
+    else:
+        df.to_csv(path, index=False)
     log.info("wrote %s  (%d rows x %d cols)", path.name, *df.shape)
     return path
 
@@ -97,6 +140,22 @@ class QualityReport:
     def __init__(self, pipeline: str):
         self.pipeline = pipeline
         self.data: dict[str, Any] = {"pipeline": pipeline, "checks": {}, "metrics": {}}
+
+    def step(self, name: str, rows: int, cols: int | None = None) -> None:
+        """Log the row count after a processing step (kept in order, saved in the report)."""
+        steps = self.data.setdefault("row_counts", [])
+        prev = steps[-1]["rows"] if steps else None
+        steps.append({"step": name, "rows": int(rows), **({"cols": int(cols)} if cols is not None else {})})
+        delta = "" if prev is None else f"  ({rows - prev:+d})"
+        log.info("rows  %-52s %8d%s", name, rows, delta)
+
+    def class_balance(self, labels: pd.Series, name: str = "class_balance") -> None:
+        vc = labels.value_counts().sort_index()
+        self.data["metrics"][name] = {
+            "counts": {str(k): int(v) for k, v in vc.items()},
+            "minority_share": round(float(vc.min() / vc.sum()), 4),
+            "imbalance_ratio_max_over_min": round(float(vc.max() / max(vc.min(), 1)), 2),
+        }
 
     def metric(self, key: str, value: Any) -> None:
         self.data["metrics"][key] = value.item() if hasattr(value, "item") else value

@@ -8,7 +8,7 @@ from __future__ import annotations
 import pandas as pd
 
 from .. import catalog, config
-from ..common import Pipeline, downcast, read_csv_plain, snake_case, write_table
+from ..common import Pipeline, count_conflicting_duplicate_keys, downcast, read_csv_plain, snake_case, write_table
 
 MACHINES = {332: "i386", 34404: "amd64", 512: "ia64", 452: "arm", 43620: "arm64"}
 PE_EPOCH_MIN = pd.Timestamp("1992-01-01")
@@ -25,6 +25,7 @@ class PeHeaderPipeline(Pipeline):
     def transform(self, raw: pd.DataFrame) -> dict[str, pd.DataFrame]:
         df = raw.rename(columns=snake_case).rename(columns={"type": "type_code"})
         df["sha256"] = df["sha256"].str.strip().str.lower()
+        self.report.metric("duplicate_hashes_with_conflicting_records", count_conflicting_duplicate_keys(df, "sha256"))
         self.report.metric("duplicate_rows_removed", int(df.duplicated("sha256").sum()))
         df = df.drop_duplicates("sha256").reset_index(drop=True)
 
@@ -46,6 +47,10 @@ class PeHeaderPipeline(Pipeline):
     def validate(self, data) -> None:
         df, r = data["clean"], self.report
         r.check("unique_sha256", df["sha256"].is_unique)
+        r.check(
+            "duplicate_hashes_have_consistent_records",
+            r.data["metrics"]["duplicate_hashes_with_conflicting_records"] == 0,
+        )
         r.check("sha256_format", df["sha256"].str.fullmatch(config.SHA256_RE.strip("^$")).all())
         r.check("no_nulls", not df.drop(columns="compile_time").isna().any().any())
         r.check("e_magic_is_MZ", (df["e_magic"] == 0x5A4D).all())

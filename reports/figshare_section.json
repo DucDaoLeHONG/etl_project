@@ -1,0 +1,126 @@
+{
+  "pipeline": "figshare_section",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha256_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_negative_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls_except_ratio": {
+      "passed": true,
+      "detail": ""
+    },
+    "type_code_range_0_6": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_consistent_with_type": {
+      "passed": true,
+      "detail": ""
+    },
+    "text_section_common": {
+      "passed": true,
+      "detail": "90.4% have .text"
+    },
+    "no_duplicate_feature_vectors": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_conflicting_labels": {
+      "passed": true,
+      "detail": ""
+    }
+  },
+  "metrics": {
+    "conflicting_label_groups": 49,
+    "conflicting_label_rows": 986,
+    "conflicting_rows_on_label_alone": 0,
+    "duplicate_feature_rows": 8030,
+    "constant_columns": [
+      "bss_pointer_to_relocations",
+      "bss_pointer_to_linenumbers",
+      "bss_number_of_relocations",
+      "bss_number_of_linenumbers",
+      "pdata_pointer_to_relocations",
+      "pdata_pointer_to_linenumbers",
+      "pdata_number_of_relocations",
+      "pdata_number_of_linenumbers"
+    ],
+    "samples_with_wx_section": 898,
+    "section_prevalence": {
+      "text": 0.9038,
+      "data": 0.5098,
+      "rdata": 0.294,
+      "bss": 0.0404,
+      "idata": 0.0571,
+      "edata": 0.0035,
+      "rsrc": 0.9037,
+      "reloc": 0.5147,
+      "tls": 0.0391,
+      "pdata": 0.0213
+    },
+    "class_balance_binary": {
+      "counts": {
+        "0": 1857,
+        "1": 18887
+      },
+      "minority_share": 0.0895,
+      "imbalance_ratio_max_over_min": 10.17
+    },
+    "class_balance_type": {
+      "counts": {
+        "0": 1857,
+        "1": 4505,
+        "2": 497,
+        "3": 2288,
+        "4": 4103,
+        "5": 3936,
+        "6": 3558
+      },
+      "minority_share": 0.024,
+      "imbalance_ratio_max_over_min": 9.06
+    },
+    "catalog_rows": 29760,
+    "seconds": 2.07
+  },
+  "row_counts": [
+    {
+      "step": "raw",
+      "rows": 29760,
+      "cols": 92
+    },
+    {
+      "step": "after duplicate-SHA-256 removal",
+      "rows": 29760
+    },
+    {
+      "step": "entering de-duplication",
+      "rows": 29760,
+      "cols": 127
+    },
+    {
+      "step": "after conflicting-label removal",
+      "rows": 28774
+    },
+    {
+      "step": "after duplicate-feature removal",
+      "rows": 20744
+    },
+    {
+      "step": "final model table",
+      "rows": 20744,
+      "cols": 122
+    }
+  ],
+  "outputs": {
+    "staging": "/home/claude/etl_project/data/processed/figshare_section_staging.csv",
+    "model": "/home/claude/etl_project/data/processed/figshare_section_model.csv"
+  }
+}

@@ -58,10 +58,10 @@
       "0": 5012
     },
     "catalog_rows": 19611,
-    "seconds": 1.15
+    "seconds": 1.52
   },
   "outputs": {
-    "train": "/home/claude/etl_project/data/processed/pe_headers_train.csv.gz",
-    "holdout": "/home/claude/etl_project/data/processed/pe_headers_holdout.csv.gz"
+    "train": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_headers_train.csv",
+    "holdout": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_headers_holdout.csv"
   }
 }

@@ -1,0 +1,108 @@
+{
+  "pipeline": "kaggle_header",
+  "checks": {
+    "unique_name": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "both_classes_present": {
+      "passed": true,
+      "detail": ""
+    },
+    "holdout_has_all_train_features": {
+      "passed": true,
+      "detail": "[]"
+    },
+    "no_nulls_in_features": {
+      "passed": true,
+      "detail": ""
+    },
+    "virusshare_names_are_malware": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_duplicate_feature_vectors": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_conflicting_labels": {
+      "passed": true,
+      "detail": ""
+    },
+    "compile_timestamps_plausible": {
+      "passed": true,
+      "detail": "701 rows (4.2%) zero/future"
+    }
+  },
+  "metrics": {
+    "feature_columns": 77,
+    "conflicting_label_groups": 4,
+    "conflicting_label_rows": 40,
+    "duplicate_feature_rows": 2948,
+    "constant_columns": [
+      "e_magic",
+      "section_max_entropy",
+      "section_max_rawsize",
+      "section_max_virtualsize",
+      "section_min_physical",
+      "section_min_virtual",
+      "section_min_pointer_data",
+      "section_main_char"
+    ],
+    "class_balance": {
+      "counts": {
+        "0": 4962,
+        "1": 11661
+      },
+      "minority_share": 0.2985,
+      "imbalance_ratio_max_over_min": 2.35
+    },
+    "catalog_rows": 16623,
+    "seconds": 0.66
+  },
+  "row_counts": [
+    {
+      "step": "raw dataset_malwares.csv",
+      "rows": 19611,
+      "cols": 79
+    },
+    {
+      "step": "raw dataset_test.csv (unlabelled, not modelled)",
+      "rows": 17
+    },
+    {
+      "step": "labelled rows entering pipeline",
+      "rows": 19611
+    },
+    {
+      "step": "after duplicate-name removal",
+      "rows": 19611
+    },
+    {
+      "step": "entering de-duplication",
+      "rows": 19611,
+      "cols": 77
+    },
+    {
+      "step": "after conflicting-label removal",
+      "rows": 19571
+    },
+    {
+      "step": "after duplicate-feature removal",
+      "rows": 16623
+    },
+    {
+      "step": "final model table",
+      "rows": 16623,
+      "cols": 72
+    }
+  ],
+  "outputs": {
+    "model": "/home/claude/etl_project/data/processed/kaggle_header_model.csv",
+    "holdout_unlabelled": "/home/claude/etl_project/data/processed/kaggle_header_holdout_unlabelled.csv"
+  }
+}

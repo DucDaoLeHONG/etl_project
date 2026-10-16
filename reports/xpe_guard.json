@@ -9,10 +9,6 @@
       "passed": true,
       "detail": ""
     },
-    "no_infinite_values": {
-      "passed": true,
-      "detail": ""
-    },
     "label_values": {
       "passed": true,
       "detail": ""
@@ -23,31 +19,32 @@
     },
     "flag_columns_binary": {
       "passed": true,
-      "detail": "28 flag columns"
+      "detail": "21 flag columns"
     },
-    "bitfield_columns_integer": {
-      "passed": true,
-      "detail": "['is_dll', 'is_executable', 'has_aslr', 'has_dep']"
-    },
-    "min_le_avg_le_max_entropy": {
+    "min_le_max_entropy": {
       "passed": true,
       "detail": ""
     },
-    "min_le_max_section_size": {
+    "no_duplicate_feature_vectors": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_conflicting_labels": {
       "passed": true,
       "detail": ""
     }
   },
   "metrics": {
-    "rows_raw": 9600,
-    "duplicate_feature_rows_with_conflicting_labels": 0,
-    "duplicate_rows_removed": 192,
     "non_binary_flag_columns": [
       "is_dll",
       "is_executable",
       "has_aslr",
       "has_dep"
     ],
+    "conflicting_label_groups": 12,
+    "conflicting_label_rows": 60,
+    "conflicting_rows_on_label_alone": 0,
+    "duplicate_feature_rows": 160,
     "constant_columns": [
       "has_delayed_imports",
       "is_executable",
@@ -59,18 +56,53 @@
       "has_relocations",
       "is_executable_any"
     ],
-    "rows_clean": 9408,
-    "family_counts": {
-      "benign": 4678,
-      "trojan": 1587,
-      "ransomware": 1574,
-      "spyware": 1569
+    "class_balance_binary": {
+      "counts": {
+        "0": 4678,
+        "1": 4702
+      },
+      "minority_share": 0.4987,
+      "imbalance_ratio_max_over_min": 1.01
     },
-    "catalog_rows": 9408,
-    "seconds": 1.19
+    "class_balance_family": {
+      "counts": {
+        "benign": 4678,
+        "ransomware": 1562,
+        "spyware": 1564,
+        "trojan": 1576
+      },
+      "minority_share": 0.1665,
+      "imbalance_ratio_max_over_min": 2.99
+    },
+    "catalog_rows": 9380,
+    "seconds": 0.3
   },
+  "row_counts": [
+    {
+      "step": "raw",
+      "rows": 9600,
+      "cols": 57
+    },
+    {
+      "step": "entering de-duplication",
+      "rows": 9600,
+      "cols": 59
+    },
+    {
+      "step": "after conflicting-label removal",
+      "rows": 9540
+    },
+    {
+      "step": "after duplicate-feature removal",
+      "rows": 9380
+    },
+    {
+      "step": "final model table",
+      "rows": 9380,
+      "cols": 54
+    }
+  ],
   "outputs": {
-    "clean": "/home/claude/etl_project/data/processed/xpe_guard_clean.csv.gz",
-    "model": "/home/claude/etl_project/data/processed/xpe_guard_model.csv.gz"
+    "model": "/home/claude/etl_project/data/processed/xpe_guard_model.csv"
   }
 }

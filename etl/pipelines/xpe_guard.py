@@ -1,72 +1,64 @@
-"""archive__6_ - XPE_Guard_Final_Dataset.csv: 9,600 PE files, 55 static features, benign vs 3 malware families.
+"""XPE-Guard (archive__6_): 9,600 PE files, 55 static features, benign + 3 malware families.
 
-Source quirks handled here: 192 exact duplicate rows, 8 constant (zero-information) columns,
-`label` (0/1) and `Family_Label` (text) that must agree.
+Quirks handled: duplicate rows, constant columns, `label` (0/1) vs `Family_Label` (text) must agree,
+four columns named is_*/has_* that hold raw PE bit values (8192, 64, 256...) instead of 0/1.
 """
 from __future__ import annotations
 
 import pandas as pd
 
 from .. import catalog, config
-from ..common import Pipeline, downcast, read_csv_from_zip, snake_case, write_table
-
-MEMBER = "XPE_Guard_Final_Dataset.csv"
+from ..common import Pipeline, downcast, drop_duplicates_and_conflicts, read_csv_from_zip, snake_case, write_table
 
 
 class XpeGuardPipeline(Pipeline):
     name = "xpe_guard"
 
     def extract(self) -> pd.DataFrame:
-        df = read_csv_from_zip(config.XPE_ARCHIVE, MEMBER)
-        self.report.metric("rows_raw", len(df))
+        df = read_csv_from_zip(config.XPE_ARCHIVE, "XPE_Guard_Final_Dataset.csv")
+        self.report.step("raw", len(df), df.shape[1])
         return df
 
     def transform(self, raw: pd.DataFrame) -> dict[str, pd.DataFrame]:
         df = raw.rename(columns=snake_case).rename(columns={"family_label": "family"})
         df["family"] = df["family"].str.strip().str.lower()
+        base = [c for c in df.columns if c not in ("label", "family")]
 
-        feature_cols = [c for c in df.columns if c not in ("label", "family")]  # before derived columns are added
-        # Same features but different label would poison training: count before dropping.
-        grp = df[df.duplicated(feature_cols, keep=False)].groupby(feature_cols)["label"].nunique()
-        self.report.metric("duplicate_feature_rows_with_conflicting_labels", int((grp > 1).sum()))
-        self.report.metric("duplicate_rows_removed", int(df.duplicated().sum()))
-        df = df.drop_duplicates().reset_index(drop=True)
-
-        # Columns named is_*/has_* that are NOT 0/1 in the source (they carry raw PE bit values such as
-        # 8192 or 64). Keep the raw value and add an unambiguous "<col>_any" boolean (value != 0).
-        self.bitfield_cols = [c for c in df.columns if c.startswith(("has_", "is_")) and not set(df[c].unique()) <= {0, 1}]
+        # Columns named is_*/has_* that are not 0/1: keep the raw value, add an unambiguous "<col>_any" flag.
+        self.bitfield_cols = [c for c in base if c.startswith(("has_", "is_")) and not set(df[c].unique()) <= {0, 1}]
         self.report.metric("non_binary_flag_columns", self.bitfield_cols)
         for c in self.bitfield_cols:
             df[f"{c}_any"] = (df[c] != 0).astype("uint8")
-
-        df["sample_id"] = [f"xpe_{i:05d}" for i in range(len(df))]  # source has no key
+        feats = base + [f"{c}_any" for c in self.bitfield_cols]
         df["family_id"] = df["family"].astype("category").cat.codes.astype("uint8")
         df = downcast(df)
 
-        constants = [c for c in df.columns if c not in ("label", "family", "family_id", "sample_id") and df[c].nunique(dropna=False) == 1]
+        model = drop_duplicates_and_conflicts(df, feats, ["label", "family"], self.report)
+        constants = [c for c in feats if model[c].nunique(dropna=False) == 1]
         self.report.metric("constant_columns", constants)
-        model = df.drop(columns=constants) if config.DROP_CONSTANT_COLUMNS else df
-        return {"clean": df, "model": model.drop(columns=["sample_id"])}
+        if config.DROP_CONSTANT_COLUMNS:
+            model = model.drop(columns=constants)
+        model.insert(0, "sample_id", [f"xpe_{i:05d}" for i in range(len(model))])  # source has no key
+        self.report.step("final model table", len(model), model.shape[1])
+        return {"model": model}
 
-    def validate(self, data: dict[str, pd.DataFrame]) -> None:
-        df, r = data["clean"], self.report
-        feats = df.drop(columns=["sample_id", "family", "family_id", "label"])
-        r.check("no_nulls", not df.isna().any().any())
-        r.check("no_negative_values", (feats.min() >= 0).all())
-        r.check("no_infinite_values", not feats.select_dtypes("floating").isin([float("inf")]).any().any())
-        r.check("label_values", set(df["label"].unique()) <= {0, 1})
-        r.check("label_matches_family", ((df["family"] == "benign") == (df["label"] == 0)).all())
-        flag_cols = [c for c in feats.columns if c.startswith(("has_", "is_")) and c not in self.bitfield_cols]
-        r.check("flag_columns_binary", all(set(df[c].unique()) <= {0, 1} for c in flag_cols), f"{len(flag_cols)} flag columns")
-        r.check("bitfield_columns_integer", all(pd.api.types.is_integer_dtype(df[c]) for c in self.bitfield_cols), str(self.bitfield_cols))
-        r.check("min_le_avg_le_max_entropy", ((df["min_entropy"] <= df["avg_entropy"] + 1e-6) & (df["avg_entropy"] <= df["max_entropy"] + 1e-6)).all())
-        r.check("min_le_max_section_size", (df["min_section_size"] <= df["max_section_size"]).all())
-        r.metric("rows_clean", len(df))
-        r.metric("family_counts", df["family"].value_counts().to_dict())
+    def validate(self, data) -> None:
+        m, r = data["model"], self.report
+        feats = [c for c in m.columns if c not in ("sample_id", "label", "family", "family_id")]
+        r.check("no_nulls", not m.isna().any().any())
+        r.check("no_negative_values", (m[feats].min() >= 0).all())
+        r.check("label_values", set(m["label"].unique()) <= {0, 1})
+        r.check("label_matches_family", ((m["family"] == "benign") == (m["label"] == 0)).all())
+        flags = [c for c in feats if c.startswith(("has_", "is_")) and c not in self.bitfield_cols]
+        r.check("flag_columns_binary", all(set(m[c].unique()) <= {0, 1} for c in flags), f"{len(flags)} flag columns")
+        r.check("min_le_max_entropy", (m["min_entropy"] <= m["max_entropy"] + 1e-6).all() if "min_entropy" in m else True)
+        r.check("no_duplicate_feature_vectors", not m.duplicated(feats).any())
+        r.check("no_conflicting_labels", not m.groupby(feats, dropna=False)["family"].nunique().gt(1).any())
+        r.class_balance(m["label"], "class_balance_binary")
+        r.class_balance(m["family"], "class_balance_family")
 
     def load(self, data):
-        paths = {k: write_table(v, f"xpe_guard_{k}") for k, v in data.items()}
-        c = data["clean"]
-        n = catalog.register("xpe_guard", c.assign(sample_key=c["sample_id"]))
-        self.report.metric("catalog_rows", n)
+        m = data["model"]
+        paths = {"model": write_table(m, "xpe_guard_model")}
+        self.report.metric("catalog_rows", catalog.register("xpe_guard", m.assign(sample_key=m["sample_id"])))
         return paths

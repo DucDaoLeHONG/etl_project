@@ -27,11 +27,11 @@ def register(dataset: str, rows: pd.DataFrame) -> int:
 
 def overlap_report() -> pd.DataFrame:
     """SHA-256 values that appear in more than one dataset (potential train/test leakage)."""
-    # dll_imports / pe_header / pe_section are three views of the same corpus, so they count as ONE source.
+    # The figshare_* tables are views of ONE corpus, so they count as one source.
     q = (
         "SELECT sha256, COUNT(DISTINCT src) AS n_sources, GROUP_CONCAT(DISTINCT dataset) AS datasets "
-        "FROM (SELECT sha256, dataset, CASE WHEN dataset IN ('dll_imports','pe_header','pe_section') "
-        "THEN 'dll_pe_corpus' ELSE dataset END AS src FROM sample_catalog WHERE sha256 IS NOT NULL) "
+        "FROM (SELECT sha256, dataset, CASE WHEN dataset LIKE 'figshare_%' THEN 'figshare' ELSE dataset END AS src "
+        "FROM sample_catalog WHERE sha256 IS NOT NULL) "
         "GROUP BY sha256 HAVING n_sources > 1"
     )
     with sqlite3.connect(config.CATALOG_DB) as con:

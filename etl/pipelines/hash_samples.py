@@ -11,7 +11,7 @@ from __future__ import annotations
 import pandas as pd
 
 from .. import catalog, config
-from ..common import Pipeline, downcast, read_csv_from_zip, snake_case, write_table
+from ..common import Pipeline, count_conflicting_duplicate_keys, downcast, read_csv_from_zip, snake_case, write_table
 
 FILES = {
     "1000_malware_sample_malicious.csv": "malicious",
@@ -60,6 +60,7 @@ class HashSamplesPipeline(Pipeline):
         conflicts = df[dup_mask].groupby("sha256")["label"].nunique().gt(1).sum()
         self.report.metric("duplicate_rows_removed", int(df.duplicated("sha256").sum()))
         self.report.metric("duplicate_hashes_with_conflicting_labels", int(conflicts))
+        self.report.metric("duplicate_hashes_with_conflicting_records", count_conflicting_duplicate_keys(df, "sha256"))
         df = df.drop_duplicates("sha256", keep="first").reset_index(drop=True)
 
         df["libraries_list"] = df["libraries"].map(split_list)
@@ -98,6 +99,10 @@ class HashSamplesPipeline(Pipeline):
     def validate(self, data: dict[str, pd.DataFrame]) -> None:
         s, r = data["samples"], self.report
         r.check("unique_sha256", s["sha256"].is_unique)
+        r.check(
+            "duplicate_hashes_have_consistent_records",
+            r.data["metrics"]["duplicate_hashes_with_conflicting_records"] == 0,
+        )
         r.check("sha256_format", s["sha256"].str.fullmatch(config.SHA256_RE.strip("^$")).all())
         r.check("sha1_format", s["sha1"].str.fullmatch(config.SHA1_RE.strip("^$")).all())
         r.check("md5_format", s["md5"].str.fullmatch(config.MD5_RE.strip("^$")).all())

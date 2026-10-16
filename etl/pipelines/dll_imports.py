@@ -8,7 +8,7 @@ from __future__ import annotations
 import pandas as pd
 
 from .. import catalog, config
-from ..common import Pipeline, read_csv_from_zip, write_table
+from ..common import Pipeline, count_conflicting_duplicate_keys, read_csv_from_zip, write_table
 
 MEMBER = "DLLs_Imported.csv"
 
@@ -38,8 +38,17 @@ class DllImportsPipeline(Pipeline):
         df["sha256"] = df["sha256"].str.strip().str.lower()
         dups = df[df.duplicated("sha256", keep=False)].groupby("sha256")["type_code"].nunique()
         self.report.metric("duplicate_hashes_with_conflicting_type", int((dups > 1).sum()))
+        self.report.metric(
+            "duplicate_hashes_with_conflicting_imports",
+            count_conflicting_duplicate_keys(df[["sha256"] + dll_cols], "sha256"),
+        )
+        duplicate_mask = df.duplicated("sha256", keep=False)
         self.report.metric("duplicate_rows_removed", int(df.duplicated("sha256").sum()))
-        df = df.drop_duplicates("sha256", keep="first").reset_index(drop=True)
+        if duplicate_mask.any():
+            merged_imports = df.loc[duplicate_mask].groupby("sha256", sort=False)[dll_cols].max()
+            df = df.drop_duplicates("sha256", keep="first").set_index("sha256", drop=False)
+            df.loc[merged_imports.index, dll_cols] = merged_imports
+            df = df.reset_index(drop=True)
 
         bits = df[dll_cols].clip(0, 1).astype("uint8")
         type_code = df["type_code"].astype("uint8")
@@ -62,6 +71,10 @@ class DllImportsPipeline(Pipeline):
     def validate(self, data: dict[str, pd.DataFrame]) -> None:
         df, r = data["features"], self.report
         r.check("unique_sha256", df["sha256"].is_unique)
+        r.check(
+            "duplicate_hashes_have_consistent_type",
+            r.data["metrics"]["duplicate_hashes_with_conflicting_type"] == 0,
+        )
         r.check("sha256_format", df["sha256"].str.fullmatch(config.SHA256_RE.strip("^$")).all())
         r.check("no_nulls", not df.isna().any().any())
         r.check("features_binary", int(df[self.dll_cols].max().max()) <= 1)

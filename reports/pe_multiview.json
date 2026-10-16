@@ -50,10 +50,10 @@
       "5": 4220,
       "6": 3699
     },
-    "seconds": 12.64
+    "seconds": 12.56
   },
   "outputs": {
-    "features": "/home/claude/etl_project/data/processed/pe_multiview_features.csv.gz",
-    "coverage": "/home/claude/etl_project/data/processed/pe_multiview_coverage.csv.gz"
+    "features": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_multiview_features.csv",
+    "coverage": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_multiview_coverage.csv"
   }
 }

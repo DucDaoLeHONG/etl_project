@@ -1,0 +1,98 @@
+{
+  "pipeline": "zenodo_hashes",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha256_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_values": {
+      "passed": true,
+      "detail": ""
+    },
+    "both_classes_present": {
+      "passed": true,
+      "detail": ""
+    },
+    "size_positive": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_duplicate_feature_vectors": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_conflicting_labels": {
+      "passed": true,
+      "detail": ""
+    }
+  },
+  "metrics": {
+    "duplicate_sha256_with_conflicting_labels": 0,
+    "conflicting_label_groups": 0,
+    "conflicting_label_rows": 0,
+    "duplicate_feature_rows": 62,
+    "constant_columns": [],
+    "class_balance": {
+      "counts": {
+        "0": 949,
+        "1": 960
+      },
+      "minority_share": 0.4971,
+      "imbalance_ratio_max_over_min": 1.01
+    },
+    "catalog_rows": 1971,
+    "seconds": 0.62
+  },
+  "row_counts": [
+    {
+      "step": "raw malicious file",
+      "rows": 1000
+    },
+    {
+      "step": "raw benign file",
+      "rows": 1000
+    },
+    {
+      "step": "raw files combined",
+      "rows": 2000
+    },
+    {
+      "step": "after duplicate-SHA-256 removal",
+      "rows": 1971
+    },
+    {
+      "step": "feature table built",
+      "rows": 1971,
+      "cols": 201
+    },
+    {
+      "step": "entering de-duplication",
+      "rows": 1971,
+      "cols": 199
+    },
+    {
+      "step": "after conflicting-label removal",
+      "rows": 1971
+    },
+    {
+      "step": "after duplicate-feature removal",
+      "rows": 1909
+    },
+    {
+      "step": "final model table",
+      "rows": 1909,
+      "cols": 201
+    }
+  ],
+  "outputs": {
+    "model": "/home/claude/etl_project/data/processed/zenodo_hashes_model.csv"
+  }
+}

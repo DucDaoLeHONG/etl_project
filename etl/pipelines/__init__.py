@@ -1,18 +1,20 @@
-from .dll_imports import DllImportsPipeline
-from .hash_samples import HashSamplesPipeline
-from .pe_header import PeHeaderPipeline
-from .pe_headers import PeHeadersPipeline
-from .pe_multiview import PeMultiviewPipeline
-from .pe_section import PeSectionPipeline
+from .figshare_dll import FigshareDllPipeline
+from .figshare_header import FigshareHeaderPipeline
+from .figshare_multiview import FigshareMultiviewPipeline
+from .figshare_section import FigshareSectionPipeline
+from .kaggle_header import KaggleHeaderPipeline
+from .pe_malware_dataset1 import PeMalwareDataset1Pipeline
 from .xpe_guard import XpeGuardPipeline
+from .zenodo_hashes import ZenodoHashesPipeline
 
-# Order matters: pe_multiview consumes the outputs of dll_imports, pe_header and pe_section.
+# Order matters: figshare_multiview consumes the staging tables of the three figshare view pipelines.
 ALL = {
-    "hash_samples": HashSamplesPipeline,
+    "zenodo_hashes": ZenodoHashesPipeline,
     "xpe_guard": XpeGuardPipeline,
-    "pe_headers": PeHeadersPipeline,
-    "dll_imports": DllImportsPipeline,
-    "pe_header": PeHeaderPipeline,
-    "pe_section": PeSectionPipeline,
-    "pe_multiview": PeMultiviewPipeline,
+    "kaggle_header": KaggleHeaderPipeline,
+    "figshare_dll": FigshareDllPipeline,
+    "figshare_header": FigshareHeaderPipeline,
+    "figshare_section": FigshareSectionPipeline,
+    "figshare_multiview": FigshareMultiviewPipeline,
+    "pe_malware_dataset1": PeMalwareDataset1Pipeline,
 }

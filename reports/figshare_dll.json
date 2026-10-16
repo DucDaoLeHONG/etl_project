@@ -1,0 +1,106 @@
+{
+  "pipeline": "figshare_dll",
+  "checks": {
+    "unique_sha256": {
+      "passed": true,
+      "detail": ""
+    },
+    "sha256_format": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_nulls": {
+      "passed": true,
+      "detail": ""
+    },
+    "features_binary": {
+      "passed": true,
+      "detail": ""
+    },
+    "type_code_range_0_6": {
+      "passed": true,
+      "detail": ""
+    },
+    "label_consistent_with_type": {
+      "passed": true,
+      "detail": ""
+    },
+    "benign_type_count_1877": {
+      "passed": true,
+      "detail": "matches the documented benign count"
+    },
+    "no_duplicate_feature_vectors": {
+      "passed": true,
+      "detail": ""
+    },
+    "no_conflicting_labels": {
+      "passed": true,
+      "detail": ""
+    }
+  },
+  "metrics": {
+    "dll_columns_merged_after_lowercase": [],
+    "duplicate_sha256_with_conflicting_type": 0,
+    "conflicting_label_groups": 107,
+    "conflicting_label_rows": 22820,
+    "conflicting_rows_on_label_alone": 15843,
+    "duplicate_feature_rows": 5768,
+    "constant_columns_dropped": 0,
+    "rows_with_zero_imports": 0,
+    "class_balance_binary": {
+      "counts": {
+        "0": 489,
+        "1": 418
+      },
+      "minority_share": 0.4609,
+      "imbalance_ratio_max_over_min": 1.17
+    },
+    "class_balance_type": {
+      "counts": {
+        "0": 489,
+        "1": 31,
+        "2": 162,
+        "3": 97,
+        "4": 67,
+        "5": 61
+      },
+      "minority_share": 0.0342,
+      "imbalance_ratio_max_over_min": 15.77
+    },
+    "catalog_rows": 29495,
+    "seconds": 4.65
+  },
+  "row_counts": [
+    {
+      "step": "raw",
+      "rows": 29498,
+      "cols": 631
+    },
+    {
+      "step": "after duplicate-SHA-256 removal",
+      "rows": 29495
+    },
+    {
+      "step": "entering de-duplication",
+      "rows": 29495,
+      "cols": 629
+    },
+    {
+      "step": "after conflicting-label removal",
+      "rows": 6675
+    },
+    {
+      "step": "after duplicate-feature removal",
+      "rows": 907
+    },
+    {
+      "step": "final model table",
+      "rows": 907,
+      "cols": 634
+    }
+  ],
+  "outputs": {
+    "staging": "/home/claude/etl_project/data/processed/figshare_dll_staging.csv",
+    "model": "/home/claude/etl_project/data/processed/figshare_dll_model.csv"
+  }
+}

@@ -5,6 +5,10 @@
       "passed": true,
       "detail": ""
     },
+    "duplicate_hashes_have_consistent_records": {
+      "passed": true,
+      "detail": ""
+    },
     "sha256_format": {
       "passed": true,
       "detail": ""
@@ -36,6 +40,7 @@
   },
   "metrics": {
     "rows_raw": 29760,
+    "duplicate_hashes_with_conflicting_records": 0,
     "duplicate_rows_removed": 0,
     "constant_columns": [
       "bss_pointer_to_relocations",
@@ -64,10 +69,10 @@
       "pdata": 0.0213
     },
     "catalog_rows": 29760,
-    "seconds": 2.69
+    "seconds": 2.82
   },
   "outputs": {
-    "features": "/home/claude/etl_project/data/processed/pe_section_features.csv.gz",
-    "sections_long": "/home/claude/etl_project/data/processed/pe_section_sections_long.csv.gz"
+    "features": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_section_features.csv",
+    "sections_long": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_section_sections_long.csv"
   }
 }

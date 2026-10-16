@@ -5,6 +5,10 @@
       "passed": true,
       "detail": ""
     },
+    "duplicate_hashes_have_consistent_type": {
+      "passed": true,
+      "detail": ""
+    },
     "sha256_format": {
       "passed": true,
       "detail": ""
@@ -39,6 +43,7 @@
     "columns_raw": 631,
     "dll_columns_merged_after_lowercase": [],
     "duplicate_hashes_with_conflicting_type": 0,
+    "duplicate_hashes_with_conflicting_imports": 3,
     "duplicate_rows_removed": 3,
     "rows_clean": 29495,
     "dll_columns": 629,
@@ -52,10 +57,10 @@
       "6": 3699
     },
     "catalog_rows": 29495,
-    "seconds": 7.25
+    "seconds": 11.53
   },
   "outputs": {
-    "features": "/home/claude/etl_project/data/processed/dll_imports_features.csv.gz",
-    "dll_vocabulary": "/home/claude/etl_project/data/processed/dll_imports_dll_vocabulary.csv.gz"
+    "features": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\dll_imports_features.csv",
+    "dll_vocabulary": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\dll_imports_dll_vocabulary.csv"
   }
 }

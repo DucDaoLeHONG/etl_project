@@ -1,0 +1,59 @@
+pipeline,step,rows,cols
+zenodo_hashes,raw malicious file,1000,
+zenodo_hashes,raw benign file,1000,
+zenodo_hashes,raw files combined,2000,
+zenodo_hashes,after duplicate-SHA-256 removal,1971,
+zenodo_hashes,feature table built,1971,201.0
+zenodo_hashes,entering de-duplication,1971,199.0
+zenodo_hashes,after conflicting-label removal,1971,
+zenodo_hashes,after duplicate-feature removal,1909,
+zenodo_hashes,final model table,1909,201.0
+xpe_guard,raw,9600,57.0
+xpe_guard,entering de-duplication,9600,59.0
+xpe_guard,after conflicting-label removal,9540,
+xpe_guard,after duplicate-feature removal,9380,
+xpe_guard,final model table,9380,54.0
+kaggle_header,raw dataset_malwares.csv,19611,79.0
+kaggle_header,"raw dataset_test.csv (unlabelled, not modelled)",17,
+kaggle_header,labelled rows entering pipeline,19611,
+kaggle_header,after duplicate-name removal,19611,
+kaggle_header,entering de-duplication,19611,77.0
+kaggle_header,after conflicting-label removal,19571,
+kaggle_header,after duplicate-feature removal,16623,
+kaggle_header,final model table,16623,72.0
+figshare_dll,raw,29498,631.0
+figshare_dll,after duplicate-SHA-256 removal,29495,
+figshare_dll,entering de-duplication,29495,629.0
+figshare_dll,after conflicting-label removal,6675,
+figshare_dll,after duplicate-feature removal,907,
+figshare_dll,final model table,907,634.0
+figshare_header,raw,29807,54.0
+figshare_header,after duplicate-SHA-256 removal,29807,
+figshare_header,entering de-duplication,29807,54.0
+figshare_header,after conflicting-label removal,29412,
+figshare_header,after duplicate-feature removal,23354,
+figshare_header,final model table,23354,55.0
+figshare_section,raw,29760,92.0
+figshare_section,after duplicate-SHA-256 removal,29760,
+figshare_section,entering de-duplication,29760,127.0
+figshare_section,after conflicting-label removal,28774,
+figshare_section,after duplicate-feature removal,20744,
+figshare_section,final model table,20744,122.0
+figshare_multiview,header view (staging),29807,57.0
+figshare_multiview,section view (staging),29760,130.0
+figshare_multiview,dll view (staging),29495,633.0
+figshare_multiview,after header+section inner join,29514,184.0
+figshare_multiview,after +dll inner join,29492,814.0
+figshare_multiview,entering de-duplication,29492,811.0
+figshare_multiview,after conflicting-label removal,29276,
+figshare_multiview,after duplicate-feature removal,23426,
+figshare_multiview,final model table,23426,804.0
+pe_malware_dataset1,raw Header.csv,18551,54.0
+pe_malware_dataset1,raw Sections.csv,18546,92.0
+pe_malware_dataset1,header after duplicate-SHA-256 removal,18551,
+pe_malware_dataset1,sections after duplicate-SHA-256 removal,18546,
+pe_malware_dataset1,after Header+Sections inner join on SHA256,18546,145.0
+pe_malware_dataset1,entering de-duplication,18546,181.0
+pe_malware_dataset1,after conflicting-label removal,14265,
+pe_malware_dataset1,after duplicate-feature removal,14100,
+pe_malware_dataset1,final model table,14100,164.0

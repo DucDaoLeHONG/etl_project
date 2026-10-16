@@ -6,10 +6,19 @@ Outputs a wide table (one row per sample) and a long table (one row per sample x
 """
 from __future__ import annotations
 
+import logging
+import sys
+from pathlib import Path
+
 import pandas as pd
 
-from .. import catalog, config
-from ..common import Pipeline, downcast, read_csv_plain, snake_case, write_table
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from etl import catalog, config
+    from etl.common import Pipeline, count_conflicting_duplicate_keys, downcast, read_csv_plain, snake_case, write_table
+else:
+    from .. import catalog, config
+    from ..common import Pipeline, count_conflicting_duplicate_keys, downcast, read_csv_plain, snake_case, write_table
 
 SCN_EXEC, SCN_WRITE = 0x20000000, 0x80000000
 SECTIONS = ["text", "data", "rdata", "bss", "idata", "edata", "rsrc", "reloc", "tls", "pdata"]
@@ -29,6 +38,7 @@ class PeSectionPipeline(Pipeline):
     def transform(self, raw: pd.DataFrame) -> dict[str, pd.DataFrame]:
         df = raw.rename(columns=snake_case).rename(columns={"type": "type_code"})
         df["sha256"] = df["sha256"].str.strip().str.lower()
+        self.report.metric("duplicate_hashes_with_conflicting_records", count_conflicting_duplicate_keys(df, "sha256"))
         self.report.metric("duplicate_rows_removed", int(df.duplicated("sha256").sum()))
         df = df.drop_duplicates("sha256").reset_index(drop=True)
         missing = [f"{s}_{f}" for s in SECTIONS for f in FIELDS if f"{s}_{f}" not in df.columns]
@@ -71,6 +81,10 @@ class PeSectionPipeline(Pipeline):
     def validate(self, data) -> None:
         w, lg, r = data["features"], data["sections_long"], self.report
         r.check("unique_sha256", w["sha256"].is_unique)
+        r.check(
+            "duplicate_hashes_have_consistent_records",
+            r.data["metrics"]["duplicate_hashes_with_conflicting_records"] == 0,
+        )
         r.check("sha256_format", w["sha256"].str.fullmatch(config.SHA256_RE.strip("^$")).all())
         num = w.drop(columns=["sha256"]).select_dtypes("number")
         r.check("no_negative_values", (num.min() >= 0).all())
@@ -90,3 +104,9 @@ class PeSectionPipeline(Pipeline):
         n = catalog.register("pe_section", m.assign(sample_key=m["sha256"], family=m["type_code"].astype(str)))
         self.report.metric("catalog_rows", n)
         return paths
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)-7s %(message)s", datefmt="%H:%M:%S")
+    report = PeSectionPipeline().run()
+    raise SystemExit(0 if report.ok else 1)

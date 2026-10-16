@@ -1,0 +1,8 @@
+dataset,raw_file,source_name,source_url,licence,licence_verified,backup_location,notes
+zenodo_hashes,15038698.zip,Zenodo,,,no,,Record ID inferred from the file name - confirm. 1k malicious + 1k benign samples.
+xpe_guard,archive__6_.zip,XPE-Guard,,,no,,Fill in where it was downloaded from.
+kaggle_header,archive__8_.zip,Kaggle,,,no,,dataset_malwares.csv + dataset_test.csv
+figshare_dll,archive__7_.zip,Figshare,,,no,,DLLs_Imported.csv. Type 0=Benign per a third-party (Baselight/Kaggle-mirror) description; confirm on the Figshare record.
+figshare_header,PE_Header.csv,Figshare,,,no,,See figshare_dll note.
+figshare_section,PE_Section.csv,Figshare,,,no,,See figshare_dll note.
+pe_malware_dataset1,PE-Malware-Dataset1-main__1_.zip,GitHub DA-Proj/PE-Malware-Dataset1 (also Mendeley Data DOI 10.17632/vnj7sxkt53.1),https://github.com/DA-Proj/PE-Malware-Dataset1,,no,,Zip contains no LICENSE file; read the licence on the Mendeley/GitHub page. Paper: arXiv 2210.16285.

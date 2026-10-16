@@ -5,6 +5,10 @@
       "passed": true,
       "detail": ""
     },
+    "duplicate_hashes_have_consistent_records": {
+      "passed": true,
+      "detail": ""
+    },
     "sha256_format": {
       "passed": true,
       "detail": ""
@@ -40,6 +44,7 @@
   },
   "metrics": {
     "rows_raw": 29807,
+    "duplicate_hashes_with_conflicting_records": 0,
     "duplicate_rows_removed": 0,
     "constant_columns": [
       "e_magic",
@@ -56,10 +61,10 @@
       "6": 3706
     },
     "catalog_rows": 29807,
-    "seconds": 1.93
+    "seconds": 2.16
   },
   "outputs": {
-    "clean": "/home/claude/etl_project/data/processed/pe_header_clean.csv.gz",
-    "model": "/home/claude/etl_project/data/processed/pe_header_model.csv.gz"
+    "clean": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_header_clean.csv",
+    "model": "C:\\Users\\pc\\Downloads\\etl_project\\data\\processed\\pe_header_model.csv"
   }
 }
